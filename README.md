@@ -4,14 +4,14 @@
 
 Required Data:
 
-| Entry               | Description                     | 
-|---------------------|---------------------------------|
-| Date                | Date of Movie                   |
-| Title               | Title of Movie                  |
-| Tickets sold        | Number of Tickets sold          |
-| Free Tickets        | Number of Free Ticket Visitors  |
-| Club Cards          | Number of Club Cards sold       |
-| Genres              | List of Genres of the Movie     |
-| Goal                | Visitor goal determined by team |
-| Start-Nr            | Start-Nr of Movie               |
-| End-Nr              | End-Nr of Movie                 |
+| Entry               | Description                     | Type         |
+|---------------------|---------------------------------|--------------|
+| Date                | Date of Movie                   | String       |
+| Title               | Title of Movie                  | String       |
+| Tickets sold        | Number of Tickets sold          | Integer      |
+| Free Tickets        | Number of Free Ticket Visitors  | Integer      |
+| Club Cards          | Number of Club Cards sold       | Integer      |
+| Genres              | List of Genres of the Movie     | List         |
+| Goal                | Visitor goal determined by team | Integer      |
+| Start-Nr            | Start-Nr of Movie               | Integer      |
+| End-Nr              | End-Nr of Movie                 | Integer      |
