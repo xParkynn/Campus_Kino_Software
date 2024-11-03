@@ -1,0 +1,5 @@
+Date,Movie,Tickets,Free-Tickets,Club-Cards,Genres,Visitors,Goal,Start-Nr,End-Nr
+16.10.2024,Deadpool,22,0,22,"['Action', 'Comedy']",22,20,267201.0,267222.0
+23.10.2024,Chantal im Märchenland,35,14,49,['Comedy'],49,50,267223.0,267258.0
+30.10.2024,Scarface,15,14,26,['Thriller'],29,10,267585.0,267599.0
+Total,,72,28,97,,100,80,,
