@@ -1,8 +1,10 @@
 import reflex as rx
 from backend_pandas import TicketManager
 from .HomePage import sidebar
+from .ModifierPage import FormState
 
 TiMg = TicketManager()
+
 
 def Ticket_Home():
     return rx.hstack(
@@ -33,17 +35,34 @@ def Ticket_Home():
             rx.divider(size="4", width="100%"),
             rx.vstack(
                 *[
-                    rx.link(
-                        rx.button(ticket["Movie"]),
-                        href=f"/TiMg_{ticket['Movie']}"
+                    
+                    rx.hstack(
+
+                        table_row(idx=idx, ticket=ticket)
+                        
                     )
-                    for i, ticket in TiMg.db.iterrows() if i != "Total"
+
+                    for idx, ticket in TiMg.db.iterrows() if idx != "Total"
                 ],
-                spacing="1rem",
+                spacing="4",
                 padding="2rem"
             ),
             width="100%",
             height="100vh",
             padding_y="1em"
         )
+    )
+
+def table_row(idx, ticket):
+    return rx.table.row(
+        rx.table.cell(idx),
+        rx.table.cell(ticket["Movie"]),
+        rx.table.cell(
+            rx.link(
+                rx.text("edit"),
+                href=f"/TiMg_{ticket["Movie"]}",
+                on_click= lambda: FormState.load(idx)
+                
+            )
+            )
     )
