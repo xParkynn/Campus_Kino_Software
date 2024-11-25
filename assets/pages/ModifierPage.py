@@ -3,11 +3,10 @@ from backend_pandas import TicketManager
 import pandas as pd
 
 TiMg = TicketManager()
-
+db = TiMg.db
 class FormState(rx.State):
 
-    db: pd.DataFrame = TiMg.db
-
+    
     name: str = ""
     date: str = ""
     tickets_sold: int = 0
@@ -15,41 +14,70 @@ class FormState(rx.State):
     clubcards: int = 0
     genre1: str = ""
     genre2: str = ""
-    genres: list = []
     goal: int = 0
     startnr: int = 0
     endnr: int = 0
     
+    def load(self, date):
+        movie_db = db.loc[date]
+        self.name = movie_db["Movie"]
+        self.date = date
+        self.tickets_sold = int(movie_db["Tickets"])
+        self.free_tickets = int(movie_db["Free-Tickets"])
+        self.clubcards = int(movie_db["Club-Cards"])
+        if(type(movie_db["Genres"]) == str):
+            self.genre1, self.genre2 = get_genre(movie_db["Genres"])
+        else:
+            self.genre1, self.genre2 = movie_db["Genres"][0], movie_db["Genres"][1]
+        self.goal = int(movie_db["Goal"])
+        self.startnr = int(movie_db["Start-Nr"])
+        self.endnr = int(movie_db["End-Nr"])
+
+    def change_date(self, date):
+        self.date = date
 
     def submit_form(self, form_data):
-        TiMg.save_tickets(name=form_data["name"], date=form_data["date"], tickets_sold=int(form_data["tickets_sold"]), free_tickets=int(form_data["free_tickets"]), clubcards=int(form_data["clubcards"]), genres=[form_data['genre1'], form_data['genre2']], goal=int(form_data["goal"]), startnr=int(form_data["startnr"]), endnr=int(form_data["endnr"]))
+        TiMg.save_tickets(
+            name=form_data["name"],
+            date=form_data["date"],
+            tickets_sold=int(form_data["tickets_sold"]),
+            free_tickets=int(form_data["free_tickets"]),
+            clubcards=int(form_data["clubcards"]),
+            genres=[form_data['genre1'], form_data['genre2']],
+            goal=int(form_data["goal"]),
+            startnr=int(form_data["startnr"]),
+            endnr=int(form_data["endnr"])
+        )
+        return rx.redirect(path="/TicketManagement")
+    
+    def change_name(self, name):
+        self.name = name
+    def change_ticket(self, ticket):
+        self.tickets_sold = ticket
+    def change_free(self, free):
+        self.free_tickets = free
+    def change_club(self, club):
+        self.clubcards = club
+    def change_genre1(self, genre):
+        self.genre1 = genre
+    def change_genre2(self, genre):
+        self.genre2 = genre
+    def change_goal(self, goal):
+        self.goal = goal
+    def change_stnr(self, startnr):
+        self.startnr = startnr
+    def change_endnr(self, endnr):
+        self.endnr = endnr
 
-    def get_db(self, date: str) -> pd.DataFrame:
-        return str(self.db.loc[date]["Movie"])
     
 
-
+def get_genre(genre_str: str):
+    
+    genre_lst = genre_str.split(",") #split genre string    
+    return genre_lst[0][2:len(genre_lst[0])-1], genre_lst[1][2:len(genre_lst[1])-2] if len(genre_lst) == 2 else  genre_lst[0][2:len(genre_lst[0])-1]
+    
 
 def modify_page(date: str, name: str) -> rx.Component:
-    tickets = ""
-    free_tickets = ""
-    clubcards = ""
-    genre1 = ""
-    genre2 = ""
-    goal = ""
-    startnr = ""
-    endnr = ""
-    
-    if date in TiMg.db.index:
-        db = TiMg.db.loc[date]
-        tickets = str(db["Tickets"])
-        free_tickets = str(db["Free-Tickets"])
-        clubcards = str(db["Club-Cards"])
-  
-        goal = str(db["Goal"])
-        startnr = str(int(db["Start-Nr"]))
-        endnr = str(int(db["End-Nr"]))
-
     
     return rx.center(
             rx.box(
@@ -63,14 +91,16 @@ def modify_page(date: str, name: str) -> rx.Component:
                                     rx.input(
                                         placeholder="Filmname",
                                         name="name",
-                                        value = name,
-                                        required=True
+                                        value = FormState.name,
+                                        required=True,
+                                        on_change = FormState.change_name
                                     ),
                                     rx.input(
                                         placeholder="Datum",
                                         name="date",
                                         value=date,
-                                        required=True
+                                        required=True,
+                                        on_change = FormState.change_date
                                     ), 
                                 spacing="5",)
                             ),
@@ -87,20 +117,23 @@ def modify_page(date: str, name: str) -> rx.Component:
                                         rx.input(
                                             placeholder="Verkaufte Tickets",
                                             name="tickets_sold",
-                                            value=tickets,
-                                            required=True
+                                            value = FormState.tickets_sold,
+                                            required=True,
+                                            on_change = FormState.change_ticket
                                             ),
                                         rx.input(
                                             placeholder="Frei-Tickets",
                                             name="free_tickets",
-                                            value=free_tickets,
-                                            required=True
+                                            value = FormState.free_tickets,
+                                            required=True,
+                                            on_change = FormState.change_free
                                             ),
                                         rx.input(
                                             placeholder="Clubkarten",
                                             name="clubcards",
-                                            value=clubcards,
-                                            required=True
+                                            value = FormState.clubcards,
+                                            required=True,
+                                            on_change = FormState.change_club
                                             )   
                                         )
                                     ),   
@@ -114,14 +147,16 @@ def modify_page(date: str, name: str) -> rx.Component:
                                     rx.input(
                                         placeholder="Genre",
                                         name="genre1",
-                                        value=genre1,
-                                        required=True
+                                        value = FormState.genre1,
+                                        required=True,
+                                        on_change = FormState.change_genre1
                                     ),
                                     rx.input(
                                         placeholder="Genre2",
                                         name="genre2",
-                                        value=genre2,
-                                        required=True
+                                        value = FormState.genre2,
+                                        required=True,
+                                        on_change = FormState.change_genre2
                                     )
                                 )
                             ), 
@@ -133,8 +168,9 @@ def modify_page(date: str, name: str) -> rx.Component:
                                 rx.input(
                                     placeholder="Besucher-Ziel",
                                     name="goal",
-                                    value=goal,
-                                    required=True
+                                    value = FormState.goal,
+                                    required=True,
+                                    on_change = FormState.change_goal
                                 ),    
                             ),
                             border="1px solid", border_color="white", border_radius="5px", padding="15px"
@@ -146,27 +182,30 @@ def modify_page(date: str, name: str) -> rx.Component:
                                     rx.input(
                                         placeholder="Start-Nummer",
                                         name="startnr",
-                                        value=startnr,
-                                        required=True
+                                        value = FormState.startnr,
+                                        required=True,
+                                        on_change = FormState.change_stnr
                                     ),
                                     rx.input(
                                         placeholder="End-Nummer",
                                         name="endnr",
-                                        value=endnr,
-                                        required=True
+                                        value = FormState.endnr,
+                                        required=True,
+                                        on_change = FormState.change_endnr
                                     )
                                 )
                             ),
                             border="1px solid", border_color="white", border_radius="5px", padding="15px"
                         ),
+                        
                         rx.button(
                             "Hinzufügen",
-                            type="submit"
+                            type="submit",
                         ),
-                        spacing="1rem"
+                        spacing="4"
                     ),
                     padding="2rem",
-                    on_submit=FormState.submit_form,
+                    on_submit = FormState.submit_form,
                 ),
                 width="100%",                
                 max_width="600px",            
