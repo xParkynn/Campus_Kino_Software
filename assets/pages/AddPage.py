@@ -118,7 +118,7 @@ def add_movie() -> rx.Component:
                             "Hinzufügen",
                             type="submit"
                         ),
-                        spacing="1rem"
+                        spacing="4"
                     ),
                     padding="2rem",
                     on_submit=FormState.submit_form,
