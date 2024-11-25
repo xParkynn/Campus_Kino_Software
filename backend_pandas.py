@@ -1,14 +1,27 @@
 import pandas as pd
 
+class BuyManagement(object):
+    def __init__(self):
+        self.db = pd.read_csv("./storage/WS2425/bought.csv")
+
+    def save_db(self):
+        self.db.to_csv("./storage/WS2425/bought.csv")
+
+    def add_buying(self, chargenr: int, product: str, buying_price: float, selling_price: float, amount: int, mhd: str):
+        dct = {"Product": product, "Buying_Price": buying_price, "Selling_Price": selling_price, "Amount": amount, "MHD": mhd}
+        self.db.loc[chargenr] = dct
+        self.save_db()
+
+
 class StockManagement(object):
     def __init__(self):
-        self.db = pd.read_csv("./storage/db.csv").set_index("Product")
+        self.db = pd.read_csv("./storage/WS2425/stock.csv").set_index("Product")
 
     def save_db(self):
         self.db.to_csv("./storage/db.csv")
 
-    def add_entry(self, name:str, stock:int, buying_price:float, selling_price: float):
-        dct = {"Product": name, "Stock": stock, "Buying_price": buying_price, "Selling_price": selling_price, "total_sold": 0, "average_sold": 0}
+    def add_entry(self, name:str, stock:int, buying_price:float, selling_price: float, mhd: str):
+        dct = {"Product": name, "Stock": stock, "Buying_price": buying_price, "Selling_price": selling_price, "total_sold": 0, "average_sold": 0, "MHD": mhd}
         self.db.loc[name] = dct
         self.save_db()
     
@@ -24,7 +37,7 @@ class StockManagement(object):
     def add_stock(self, name:str, amount:int):
         self.db.at[name, "Stock"] += amount
 
-    def used(self, name:str, amount:int):
+    def sold(self, name:str, amount:int):
         self.db.at[name, "Stock"] -= amount
 
 class TicketManager(object):
