@@ -4,6 +4,7 @@ from .HomePage import sidebar
 from .ModifierPage import FormState
 import pandas as pd
 from typing import List, Tuple
+from .AddPage import FormState as FormStateAdd
 
 class TicketState(rx.State):
 
@@ -34,7 +35,8 @@ def Ticket_Home():
                     top="1rem",            # Abstand von oben
                     right="1rem" 
                     ),
-                    href="/add_ticket"  
+                    href="/add_movie",
+                    on_click = lambda: FormStateAdd.set_timg(True) 
                 ),
                 width="100%",
                 position="relative",      # Box als relativer Container für den Button
