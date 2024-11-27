@@ -28,6 +28,8 @@ def sidebar_item(text: str, icon: str, href: str):
 def sidebar_items():
     return rx.vstack(
         rx.divider(),
+        sidebar_item("LIVE", "", "/live"),
+        rx.divider(),
         sidebar_item("Ticket_Management", "../icons/ticket_icon.png", "/TicketManagement"),
         rx.divider(),
         sidebar_item("Snack-Management", "../icons/popcorn_icon.png", "/SnackManagement"),
