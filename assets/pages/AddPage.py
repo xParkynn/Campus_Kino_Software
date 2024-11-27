@@ -1,17 +1,21 @@
 import reflex as rx
-from backend_pandas import TicketManager
+from Program.shared import TiMg
 import pandas as pd
+from .ModifierPage import modify_page
+from Program.shared import app
 
-TiMg = TicketManager()
+
 
 class FormState(rx.State):
+
+
 
     def submit_form(self, form_data):
         TiMg.save_tickets(name=form_data["name"], date=form_data["date"], tickets_sold=int(form_data["tickets_sold"]), free_tickets=int(form_data["free_tickets"]), clubcards=int(form_data["clubcards"]), genres=[form_data['genre1'], form_data['genre2']], goal=int(form_data["goal"]), startnr=int(form_data["startnr"]), endnr=int(form_data["endnr"]))
         TiMg.update_database()
         return rx.redirect("/TicketManagement")
 
-    
+
 
 
 
