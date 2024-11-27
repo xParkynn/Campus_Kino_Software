@@ -1,7 +1,28 @@
 import reflex as rx
 
-
 # Sidebar-Components
+
+def live_button():
+    return rx.link(
+        rx.hstack(
+            #rx.image(icon, width="5em"),
+            rx.text("Live"),
+            width="100%",
+            padding_x="0.5rem",
+            padding_y="0.5rem",
+            align="center",
+            style={
+                "_hover": {
+                    "bg": rx.color("accent", 4),
+                    "color": rx.color("accent", 11),
+                },
+                "border-radius": "0.5em",
+            },
+        ),
+        href="/live",
+        underline="none",
+        weight="medium"
+    )
 
 def sidebar_item(text: str, icon: str, href: str):
     return rx.link(
@@ -28,11 +49,13 @@ def sidebar_item(text: str, icon: str, href: str):
 def sidebar_items():
     return rx.vstack(
         rx.divider(),
-        sidebar_item("LIVE", "", "/live"),
+        live_button(),
         rx.divider(),
         sidebar_item("Ticket_Management", "../icons/ticket_icon.png", "/TicketManagement"),
         rx.divider(),
         sidebar_item("Snack-Management", "../icons/popcorn_icon.png", "/SnackManagement"),
+        rx.divider(),
+        sidebar_item("Statistiken", "", "/statistics"),
         rx.divider()
     )
 

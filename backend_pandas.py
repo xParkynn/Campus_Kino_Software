@@ -1,4 +1,5 @@
 import pandas as pd
+import reflex as rx
 
 class BuyManagement(object):
     def __init__(self):
@@ -43,14 +44,13 @@ class StockManagement(object):
 class TicketManager(object):
     def __init__(self):
         self.db = pd.read_csv("./storage/WS2425/ticket_db.csv").set_index("Date")
-        self.app = None
-
-    def set_app(self, app):
-        self.app = app
+        self.live_date = None
     
     def update_database(self):
         self.db = pd.read_csv("./storage/WS2425/ticket_db.csv").set_index("Date")
 
+    def update_live(self):
+        self.live_date = pd.read_csv("./storage/live_db.csv").iloc[0]["Date"]
 
     def save_db(self):
         self.db.to_csv("./storage/WS2425/ticket_db.csv")
@@ -70,6 +70,8 @@ class TicketManager(object):
         self.db.at[date, "Tickets"] = ticket
         self.update_db(date=date)
         self.save_db()
+    
+    
 
 
     def modify_freeticket(self, date:str, ticket:int):
@@ -105,3 +107,14 @@ class TicketManager(object):
         self.db.plot(y=["Goal", "Visitors"])
 
 
+class LiveManager(object):
+    def __init__(self):
+        self.db = pd.read_csv("storage/live_db.csv").set_index("Date")
+    
+    def save_db(self):
+        self.db.to_csv("storage/live_db.csv")
+    def update_db(self):
+        self.db = pd.read_csv("storage/live_db.csv")
+
+
+    

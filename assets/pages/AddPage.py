@@ -3,7 +3,7 @@ from Program.shared import TiMg
 import pandas as pd
 from .ModifierPage import modify_page
 from Program.shared import app
-
+from .LiveMode import LiveState
 
 
 class FormState(rx.State):
@@ -16,8 +16,21 @@ class FormState(rx.State):
             TiMg.update_database()
             return rx.redirect("/TicketManagement")
         else:
-            TiMg.save_tickets(name=form_data["name"], date=form_data["date"], tickets_sold=0, free_tickets=0, clubcards= 0, genres=[form_data["genre1"], form_data["genre2"]], goal=form_data["goal"], startnr=form_data["startnr"], endnr=form_data["endnr"])
-            TiMg.update_database()
+            if not form_data["date"] in TiMg.db.index:
+                TiMg.save_tickets(name=form_data["name"], date=form_data["date"], tickets_sold=0, free_tickets=0, clubcards= 0, genres=[form_data["genre1"], form_data["genre2"]], goal=int(form_data["goal"]), startnr=int(form_data["startnr"]), endnr=int(form_data["endnr"]))
+                TiMg.update_database()
+
+            ticket, free_ticket, clubcards = 0,0,0
+            if(TiMg.db.loc[form_data["date"]]["Tickets"] != 0):
+                ticket = TiMg.db.loc[form_data["date"]]["Tickets"]
+            if(TiMg.db.loc[form_data["date"]]["Free-Tickets"] != 0):
+                free_ticket = TiMg.db.loc[form_data["date"]]["Free-Tickets"]
+            if(TiMg.db.loc[form_data["date"]]["Club-Cards"] != 0):
+                clubcards = TiMg.db.loc[form_data["date"]]["Club-Cards"]
+
+            dct = {"Date": form_data["date"], "Name": form_data["name"], "Tickets": [ticket], "Free-Tickets": [free_ticket], "Club-Cards": [clubcards]}
+            pd.DataFrame.from_dict(dct).set_index("Date", inplace=False).to_csv("storage/live_db.csv")
+            TiMg.update_live()
             return rx.redirect("/live_mode")
     
     def set_timg(self, live):
