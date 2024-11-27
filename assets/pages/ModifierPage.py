@@ -1,8 +1,7 @@
 import reflex as rx
-from backend_pandas import TicketManager
+from Program.shared import TiMg
 import pandas as pd
 
-TiMg = TicketManager()
 db = TiMg.db
 class FormState(rx.State):
 
@@ -77,13 +76,13 @@ def get_genre(genre_str: str):
     return genre_lst[0][2:len(genre_lst[0])-1], genre_lst[1][2:len(genre_lst[1])-2] if len(genre_lst) == 2 else  genre_lst[0][2:len(genre_lst[0])-1]
     
 
-def modify_page(date: str, name: str) -> rx.Component:
+def modify_page() -> rx.Component:
     
     return rx.center(
             rx.box(
                 rx.form(
                     rx.vstack(
-                        rx.heading(f"Ticket-Management for {name}", size="lg"),
+                        rx.heading(f"Ticket-Management for {FormState.name}", size="lg"),
                         rx.box(
                             rx.vstack(
                                 rx.heading("Allgemein:"),
@@ -98,7 +97,7 @@ def modify_page(date: str, name: str) -> rx.Component:
                                     rx.input(
                                         placeholder="Datum",
                                         name="date",
-                                        value=date,
+                                        value=FormState.date,
                                         required=True,
                                         on_change = FormState.change_date
                                     ), 
