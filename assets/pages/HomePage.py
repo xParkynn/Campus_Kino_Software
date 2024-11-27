@@ -1,5 +1,6 @@
 import reflex as rx
 
+
 # Sidebar-Components
 
 def sidebar_item(text: str, icon: str, href: str):

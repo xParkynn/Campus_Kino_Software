@@ -3,4 +3,5 @@ Date,Movie,Tickets,Free-Tickets,Club-Cards,Genres,Visitors,Goal,Start-Nr,End-Nr
 23.10.2024,Chantal im Märchenland,35,14,49,['Comedy'],49,50,267223.0,267258.0
 30.10.2024,Scarface,15,14,26,['Thriller'],29,10,267585.0,267599.0
 06.11.2024,Dunkirk,15,1,10,"['Action', 'Thriller']",16,40,267260.0,267274.0
-Total,,87,29,107,,116,120,,
+13.11.2024,Wüstenblume,1,1,1,"['Dokumentation', 'Drama']",2,40,144354.0,432345.0
+Total,,88,30,108,,118,160,,

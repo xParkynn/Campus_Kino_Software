@@ -2,13 +2,16 @@ import reflex as rx
 from backend_pandas import TicketManager
 from .HomePage import sidebar
 from .ModifierPage import FormState
+import pandas as pd
 
 TiMg = TicketManager()
 
 
 def Ticket_Home():
+    tickets = []
     return rx.hstack(
         sidebar(),
+        
         rx.box(
             # Container für das Heading und den Button
             rx.box(
@@ -33,19 +36,26 @@ def Ticket_Home():
                 height="4rem"             # Höhe der Box für das Layout
             ),
             rx.divider(size="4", width="100%"),
-            rx.vstack(
-                *[
+            rx.table.root(
+                rx.table.body(
+                    *[
                     
-                    rx.hstack(
+                    
 
-                        table_row(idx=idx, ticket=ticket)
+                        table_row(idx, ticket)
                         
-                    )
-
-                    for idx, ticket in TiMg.db.iterrows() if idx != "Total"
-                ],
+                    
+                        for idx, ticket in TiMg.db.iterrows() if idx != "Total"
+                    
+                    ]
+                    if not tickets else [
+                        rx.table.row(
+                            rx.table.cell("No data available")
+                        )
+                    ], 
                 spacing="4",
                 padding="2rem"
+                ),
             ),
             width="100%",
             height="100vh",
@@ -54,15 +64,19 @@ def Ticket_Home():
     )
 
 def table_row(idx, ticket):
-    return rx.table.row(
-        rx.table.cell(idx),
-        rx.table.cell(ticket["Movie"]),
-        rx.table.cell(
-            rx.link(
-                rx.text("edit"),
-                href=f"/TiMg_{ticket["Movie"]}",
-                on_click= lambda: FormState.load(idx)
-                
+    
+    if(idx != "Total"):
+       
+        return rx.table.row(
+            rx.table.cell(idx),
+            rx.table.cell(ticket["Movie"]),
+            rx.table.cell(
+                rx.link(
+                    rx.text("edit"),
+                    href=f"/TiMg_{ticket["Movie"]}",
+                    on_click= lambda: FormState.load(idx)
+                    
+                )
             )
-            )
-    )
+        )
+    

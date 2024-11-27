@@ -44,6 +44,10 @@ class TicketManager(object):
     def __init__(self):
         self.db = pd.read_csv("./storage/WS2425/ticket_db.csv").set_index("Date")
     
+    def update_database(self):
+        self.db = pd.read_csv("./storage/WS2425/ticket_db.csv").set_index("Date")
+
+
     def save_db(self):
         self.db.to_csv("./storage/WS2425/ticket_db.csv")
 

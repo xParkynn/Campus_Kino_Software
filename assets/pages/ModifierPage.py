@@ -154,8 +154,7 @@ def modify_page(date: str, name: str) -> rx.Component:
                                     rx.input(
                                         placeholder="Genre2",
                                         name="genre2",
-                                        value = FormState.genre2,
-                                        required=True,
+                                        value = FormState.genre2,                                      
                                         on_change = FormState.change_genre2
                                     )
                                 )
