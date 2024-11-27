@@ -8,12 +8,20 @@ from Program.shared import app
 
 class FormState(rx.State):
 
-
+    timg: bool = True
 
     def submit_form(self, form_data):
-        TiMg.save_tickets(name=form_data["name"], date=form_data["date"], tickets_sold=int(form_data["tickets_sold"]), free_tickets=int(form_data["free_tickets"]), clubcards=int(form_data["clubcards"]), genres=[form_data['genre1'], form_data['genre2']], goal=int(form_data["goal"]), startnr=int(form_data["startnr"]), endnr=int(form_data["endnr"]))
-        TiMg.update_database()
-        return rx.redirect("/TicketManagement")
+        if self.timg:
+            TiMg.save_tickets(name=form_data["name"], date=form_data["date"], tickets_sold=int(form_data["tickets_sold"]), free_tickets=int(form_data["free_tickets"]), clubcards=int(form_data["clubcards"]), genres=[form_data['genre1'], form_data['genre2']], goal=int(form_data["goal"]), startnr=int(form_data["startnr"]), endnr=int(form_data["endnr"]))
+            TiMg.update_database()
+            return rx.redirect("/TicketManagement")
+        else:
+            TiMg.save_tickets(name=form_data["name"], date=form_data["date"], tickets_sold=0, free_tickets=0, clubcards= 0, genres=[form_data["genre1"], form_data["genre2"]], goal=form_data["goal"], startnr=form_data["startnr"], endnr=form_data["endnr"])
+            TiMg.update_database()
+            return rx.redirect("/live_mode")
+    
+    def set_timg(self, live):
+        self.timg = live
 
 
 
@@ -48,30 +56,32 @@ def add_movie() -> rx.Component:
                             border="1px solid",
                             border_color="white"
                         ),
-                        rx.box(
-                            rx.vstack(
-                                rx.heading("Karten:"),
-                                rx.center(
-                                    rx.hstack(
-                                        rx.input(
-                                            placeholder="Verkaufte Tickets",
-                                            name="tickets_sold",
-                                            required=True
-                                            ),
-                                        rx.input(
-                                            placeholder="Frei-Tickets",
-                                            name="free_tickets",
-                                            required=True
-                                            ),
-                                        rx.input(
-                                            placeholder="Clubkarten",
-                                            name="clubcards",
-                                            required=True
-                                            )   
-                                        )
-                                    ),   
-                                ),
-                            border="1px solid", border_color="white", border_radius="5px", padding="15px"
+                        rx.cond(condition=FormState.timg,
+                                c1=rx.box(
+                                    rx.vstack(
+                                        rx.heading("Karten:"),
+                                        rx.center(
+                                            rx.hstack(
+                                                rx.input(
+                                                    placeholder="Verkaufte Tickets",
+                                                    name="tickets_sold",
+                                                    required=True
+                                                    ),
+                                                rx.input(
+                                                    placeholder="Frei-Tickets",
+                                                    name="free_tickets",
+                                                    required=True
+                                                    ),
+                                                rx.input(
+                                                    placeholder="Clubkarten",
+                                                    name="clubcards",
+                                                    required=True
+                                                    )   
+                                                )
+                                            ),   
+                                        ),
+                                    border="1px solid", border_color="white", border_radius="5px", padding="15px"
+                                )
                         ),
                         rx.box(
                             rx.vstack(
