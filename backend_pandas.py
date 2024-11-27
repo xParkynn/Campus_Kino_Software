@@ -43,6 +43,10 @@ class StockManagement(object):
 class TicketManager(object):
     def __init__(self):
         self.db = pd.read_csv("./storage/WS2425/ticket_db.csv").set_index("Date")
+        self.app = None
+
+    def set_app(self, app):
+        self.app = app
     
     def update_database(self):
         self.db = pd.read_csv("./storage/WS2425/ticket_db.csv").set_index("Date")
