@@ -1,11 +1,20 @@
 import reflex as rx
-from backend_pandas import TicketManager
+from Program.shared import TiMg
 from .HomePage import sidebar
 from .ModifierPage import FormState
 import pandas as pd
+from typing import List, Tuple
 
-TiMg = TicketManager()
+class TicketState(rx.State):
 
+    tickets: List[Tuple[str, str]] = []
+
+    def load(self):
+        self.tickets = []
+        for idx, ticket in TiMg.db.iterrows():
+            if idx == "Total":
+                break
+            self.tickets.append((idx, ticket["Movie"]))
 
 def Ticket_Home():
     tickets = []
@@ -42,10 +51,10 @@ def Ticket_Home():
                     
                     
 
-                        table_row(idx, ticket)
+                        rx.foreach(TicketState.tickets, table_row)
                         
                     
-                        for idx, ticket in TiMg.db.iterrows() if idx != "Total"
+                        
                     
                     ]
                     if not tickets else [
@@ -64,19 +73,20 @@ def Ticket_Home():
     )
 
 def table_row(idx, ticket):
+    idx, ticket = idx[0], idx[1]
     
-    if(idx != "Total"):
-       
-        return rx.table.row(
-            rx.table.cell(idx),
-            rx.table.cell(ticket["Movie"]),
-            rx.table.cell(
-                rx.link(
-                    rx.text("edit"),
-                    href=f"/TiMg_{ticket["Movie"]}",
-                    on_click= lambda: FormState.load(idx)
+
+    return rx.table.row(
+        rx.table.cell(idx),
+        rx.table.cell(ticket),
+        rx.table.cell(
+            rx.link(
+                rx.text("edit"),
+                href=f"/TiMg",
+                on_click= lambda: FormState.load(idx)
                     
-                )
+                
             )
         )
     
+    )
