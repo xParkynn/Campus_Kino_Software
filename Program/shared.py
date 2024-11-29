@@ -1,7 +1,6 @@
-from backend_pandas import TicketManager, LiveManager
+from backend_pandas import TicketManager
 import reflex as rx
 
 
 TiMg = TicketManager()
-LiMg = LiveManager()
 app = rx.App()
