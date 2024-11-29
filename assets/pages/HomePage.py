@@ -51,7 +51,7 @@ def sidebar_items():
         rx.divider(),
         live_button(),
         rx.divider(),
-        sidebar_item("Ticket_Management", "../icons/ticket_icon.png", "/TicketManagement"),
+        sidebar_item("Ticket-Management", "../icons/ticket_icon.png", "/TicketManagement"),
         rx.divider(),
         sidebar_item("Snack-Management", "../icons/popcorn_icon.png", "/SnackManagement"),
         rx.divider(),
