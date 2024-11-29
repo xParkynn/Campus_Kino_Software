@@ -1,5 +1,5 @@
 import reflex as rx
-from Program.shared import TiMg, app, LiMg
+from Program.shared import TiMg
 from .HomePage import sidebar
 import pandas as pd
 
