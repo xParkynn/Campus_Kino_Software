@@ -10,36 +10,12 @@ class TicketState(rx.State):
 
     tickets: List[Tuple[str, str]] = []
 
-    def flip(self, idc):
-        lst = TiMg.db.index
-        lst2 = list()
-        for elem in lst:
-            if(idc == 1):
-                flipped = list(elem)
-                temp = elem[-2]
-                flipped[-2] = flipped[-1]
-                flipped[-1] = temp
-                flipped = "".join(flipped)[::-1]
-            
-            if(idc == 0):
-                flipped= list(elem[::-1])
-                temp = flipped[-2]
-                flipped[-2] = flipped[-1]
-                flipped[-1] = temp
-                flipped = "".join(flipped)
-
-            lst2.append(flipped)
-        return lst2
+    
 
     def load(self):
         self.tickets = []
-        flipped = self.flip(0)
-        TiMg.db["Flipped"] = flipped
-        TiMg.db.set_index("Flipped", inplace=True)
-        TiMg.db.sort_index(inplace=True)
-        reflipped = self.flip(1)
-        TiMg.db["Flipped"] = reflipped
-        TiMg.db.set_index("Flipped", inplace=True)
+        TiMg.sort()
+        
 
         for idx, ticket in TiMg.db.iterrows():
             if idx == "Total":

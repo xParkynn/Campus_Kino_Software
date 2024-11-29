@@ -14,10 +14,12 @@ class FormState(rx.State):
         if self.timg:
             TiMg.save_tickets(name=form_data["name"], date=form_data["date"], tickets_sold=int(form_data["tickets_sold"]), free_tickets=int(form_data["free_tickets"]), clubcards=int(form_data["clubcards"]), genres=[form_data['genre1'], form_data['genre2']], goal=int(form_data["goal"]), startnr=int(form_data["startnr"]), endnr=int(form_data["endnr"]))
             TiMg.update_database()
+            TiMg.set_sorted(False)
             return rx.redirect("/TicketManagement")
         else:
             if not form_data["date"] in TiMg.db.index:
                 TiMg.save_tickets(name=form_data["name"], date=form_data["date"], tickets_sold=0, free_tickets=0, clubcards= 0, genres=[form_data["genre1"], form_data["genre2"]], goal=int(form_data["goal"]), startnr=int(form_data["startnr"]), endnr=int(form_data["endnr"]))
+                TiMg.set_sorted(False)
                 TiMg.update_database()
 
             ticket, free_ticket, clubcards = 0,0,0

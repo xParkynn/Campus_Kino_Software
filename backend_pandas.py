@@ -45,7 +45,11 @@ class TicketManager(object):
     def __init__(self):
         self.db = pd.read_csv("./storage/WS2425/ticket_db.csv").set_index("Date")
         self.live_date = None
+        self.sorted = True
     
+    def set_sorted(self, sort: bool):
+        self.sorted = sort
+
     def update_database(self):
         self.db = pd.read_csv("./storage/WS2425/ticket_db.csv").set_index("Date")
 
@@ -71,7 +75,28 @@ class TicketManager(object):
         self.update_db(date=date)
         self.save_db()
     
-    
+    def sort(self):
+        if self.sorted:
+            return
+        lst = list()
+        for i in range(0,2):
+            print(f"iteration{i}")
+            for elem in filter(lambda x: x!="Total", self.db.index):
+                elem = elem.split(".")
+                elem[0], elem[-1] = elem[-1], elem[0]
+                print(elem)
+                lst.append(f"{elem[0]}.{elem[1]}.{elem[2]}")
+            lst.append("Total")
+            self.db["Date"] = lst
+            self.db.set_index("Date", inplace=True)
+            if not self.sorted:
+                self.db.sort_index(inplace=True)
+                self.set_sorted(True)
+                lst = []
+        self.save_db()
+        
+
+            
 
 
     def modify_freeticket(self, date:str, ticket:int):
@@ -105,16 +130,6 @@ class TicketManager(object):
 
     def plot_goal(self):
         self.db.plot(y=["Goal", "Visitors"])
-
-
-class LiveManager(object):
-    def __init__(self):
-        self.db = pd.read_csv("storage/live_db.csv").set_index("Date")
-    
-    def save_db(self):
-        self.db.to_csv("storage/live_db.csv")
-    def update_db(self):
-        self.db = pd.read_csv("storage/live_db.csv")
 
 
     
