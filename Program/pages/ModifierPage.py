@@ -1,5 +1,5 @@
 import reflex as rx
-from Program.shared import TiMg
+from Program.shared import TiMg, set_nr, get_nr
 import pandas as pd
 
 db = TiMg.db
@@ -29,8 +29,8 @@ class FormState(rx.State):
         else:
             self.genre1, self.genre2 = movie_db["Genres"][0], movie_db["Genres"][1]
         self.goal = int(movie_db["Goal"])
-        self.startnr = int(movie_db["Start-Nr"])
-        self.endnr = int(movie_db["End-Nr"])
+        self.startnr = get_nr(movie_db["Start-Nr"])
+        self.endnr = get_nr(movie_db["End-Nr"])
 
     def change_date(self, date):
         self.date = date
@@ -44,8 +44,8 @@ class FormState(rx.State):
             clubcards=int(form_data["clubcards"]),
             genres=[form_data['genre1'], form_data['genre2']],
             goal=int(form_data["goal"]),
-            startnr=int(form_data["startnr"]),
-            endnr=int(form_data["endnr"])
+            startnr=set_nr(form_data["startnr"]),
+            endnr=set_nr(form_data["endnr"])
         )
         return rx.redirect(path="/TicketManagement")
     

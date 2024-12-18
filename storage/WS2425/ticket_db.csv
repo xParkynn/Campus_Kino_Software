@@ -1,8 +1,10 @@
-Date,Movie,Tickets,Free-Tickets,Club-Cards,Genres,Visitors,Goal,Start-Nr,End-Nr
-16.10.2024,Deadpool,22,0,22,"['Action', 'Comedy']",22,20,267201.0,267222.0
-23.10.2024,Chantal im Märchenland,35,14,49,['Comedy'],49,50,267223.0,267258.0
-30.10.2024,Scarface,15,14,26,['Thriller'],29,10,267585.0,267599.0
-06.11.2024,Dunkirk,15,1,10,"['Action', 'Thriller']",16,40,267260.0,267274.0
-13.11.2024,Wüstenblume,13,51,11,"['Dokumentation', 'Drama']",64,40,388301.0,388311.0
-27.11.2024,Cruella,11,0,4,"['Komödie', 'Drama']",11,30,388314.0,388322.0
-Total,,111,80,122,,191,190,,
+Date,Movie,Tickets,Free-Tickets,Club-Cards,Genres,Visitors,Goal,Start-Nr,End-Nr,Additional-Costs
+16.10.2024,Deadpool,22,0,22,"['Action', 'Comedy']",22,20,267201.0,267222.0,0.0
+23.10.2024,Chantal im Märchenland,35,14,49,['Comedy'],49,50,267223.0,267258.0,0.0
+30.10.2024,Scarface,15,14,26,['Thriller'],29,10,267585.0,267599.0,3.59
+06.11.2024,Dunkirk,15,1,10,"['Action', 'Thriller']",16,40,267260.0,267274.0,3.99
+13.11.2024,Wüstenblume,13,51,11,"['Dokumentation', 'Drama']",64,40,388301.0,388311.0,3.99
+27.11.2024,Cruella,11,0,4,"['Komödie', 'Drama']",11,30,388314.0,388322.0,0.0
+04.12.2024,High School Musical,15,22,17,"['Musical', 'Comedy']",37,200,"[388323, 388324]","[388337, 388338]",0.0
+11.12.2024,Harry Potter: Stein der Weisen,27,2,16,"['Action', 'Abenteuer']",29,50,388338,388364,
+Total,-,153,104,155,-,257,440,,,11.57

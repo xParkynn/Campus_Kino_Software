@@ -18,7 +18,7 @@ class LiveState(rx.State):
         self.db = pd.read_csv("storage/live_db.csv")
         self.date = self.db.iloc[0]["Date"]
         self.name = self.db.iloc[0]["Name"]
-        self.tickets = int(TiMg.db.loc[self.date]["Tickets"])  # Ensure tickets is an integer
+        self.tickets = int(TiMg.db.loc[self.date]["Tickets"])
         self.free_tickets = int(self.db.iloc[0]["Free-Tickets"])
         self.clubcards = int(self.db.iloc[0]["Club-Cards"])
 

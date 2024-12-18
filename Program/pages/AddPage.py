@@ -1,21 +1,27 @@
 import reflex as rx
-from Program.shared import TiMg
+from Program.shared import TiMg, FiMg
 import pandas as pd
 from .ModifierPage import modify_page
 from Program.shared import app
 from .LiveMode import LiveState
 
-
 class FormState(rx.State):
 
     timg: bool = True
+    date: str = ""
 
     def submit_form(self, form_data):
+        
+        self.date = form_data["date"]
+        with open("/temp", "w") as file:
+            file.write(self.date)
+        
         if self.timg:
             TiMg.save_tickets(name=form_data["name"], date=form_data["date"], tickets_sold=int(form_data["tickets_sold"]), free_tickets=int(form_data["free_tickets"]), clubcards=int(form_data["clubcards"]), genres=[form_data['genre1'], form_data['genre2']], goal=int(form_data["goal"]), startnr=int(form_data["startnr"]), endnr=int(form_data["endnr"]))
             TiMg.update_database()
             TiMg.set_sorted(False)
-            return rx.redirect("/TicketManagement")
+            FiMg.get_ticket_data()
+            return rx.redirect("/FinanceManagement")
         else:
             if not form_data["date"] in TiMg.db.index:
                 TiMg.save_tickets(name=form_data["name"], date=form_data["date"], tickets_sold=0, free_tickets=0, clubcards= 0, genres=[form_data["genre1"], form_data["genre2"]], goal=int(form_data["goal"]), startnr=int(form_data["startnr"]), endnr=int(form_data["endnr"]))
@@ -35,6 +41,8 @@ class FormState(rx.State):
             TiMg.update_live()
             return rx.redirect("/live_mode")
     
+    def get_date(self):
+        return self.date
     def set_timg(self, live):
         self.timg = live
 
@@ -152,7 +160,7 @@ def add_movie() -> rx.Component:
                         spacing="4"
                     ),
                     padding="2rem",
-                    on_submit=FormState.submit_form,
+                    on_submit=FormState.submit_form
                 ),
                 width="100%",                
                 max_width="600px",            

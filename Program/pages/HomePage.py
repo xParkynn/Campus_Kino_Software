@@ -27,13 +27,13 @@ def sidebar_item(text: str, href: str):
 def sidebar_items():
     return rx.vstack(
         rx.divider(),
-        sidebar_item("LIVE", "", "/live"),
+        sidebar_item("LIVE", "/live"),
         rx.divider(),
         sidebar_item("Ticket-Management", "/TicketManagement"),
         rx.divider(),
         sidebar_item("Snack-Management", "/SnackManagement"),
         rx.divider(),
-        sidebar_item("Statistiken", "", "/statistics"),
+        sidebar_item("Statistiken", "/statistics"),
         rx.divider()
     )
 
@@ -53,8 +53,10 @@ def sidebar():
             padding_y="1.5em",
             bg=rx.color("bronze", 3),
             align="start",
-            height="100vh",
-            width="16em"
+            min_height="100vh",
+            width="16em",
+            overflow_y = "auto"
 
         )
+        
     )

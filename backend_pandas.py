@@ -1,5 +1,6 @@
 import pandas as pd
 import reflex as rx
+import math
 
 class BuyManagement(object):
     def __init__(self):
@@ -59,7 +60,7 @@ class TicketManager(object):
     def save_db(self):
         self.db.to_csv("./storage/WS2425/ticket_db.csv")
 
-    def save_tickets(self, name:str, date:str, tickets_sold: int, free_tickets:int, clubcards: int, genres:list, goal:int, startnr:int, endnr:int):
+    def save_tickets(self, name:str, date:str, tickets_sold: int, free_tickets:int, clubcards: int, genres:list, goal:int, startnr:int = None, endnr:int=None):
         dct = {"Movie": name, "Tickets": tickets_sold, "Free-Tickets": free_tickets, "Club-Cards": clubcards, "Genres": genres, "Visitors": tickets_sold+free_tickets, "Goal": goal, "Start-Nr": startnr, "End-Nr": endnr}
         self.db.loc[date] = dct
         self.add_total()
@@ -67,7 +68,7 @@ class TicketManager(object):
     
     def add_total(self):
         self.db.drop("Total", inplace=True, axis=0)
-        dct = {"Date": None, "Tickets": self.db["Tickets"].sum(), "Free-Tickets": self.db["Free-Tickets"].sum(), "Club-Cards": self.db["Club-Cards"].sum(), "Visitors": self.db["Visitors"].sum(), "Goal": self.db["Goal"].sum()}
+        dct = {"Date": '-',"Movie": '-', "Tickets": self.db["Tickets"].sum(), "Free-Tickets": self.db["Free-Tickets"].sum(), "Club-Cards": self.db["Club-Cards"].sum(), "Genres": "-", "Visitors": self.db["Visitors"].sum(), "Goal": self.db["Goal"].sum(), "Additional-Costs": self.db["Additional-Costs"].sum()}
         self.db.loc["Total"] = dct
 
     def modify_ticket(self, date:str,ticket: int):
@@ -79,8 +80,7 @@ class TicketManager(object):
         if self.sorted:
             return
         lst = list()
-        for i in range(0,2):
-            print(f"iteration{i}")
+        for i in range(2):
             for elem in filter(lambda x: x!="Total", self.db.index):
                 elem = elem.split(".")
                 elem[0], elem[-1] = elem[-1], elem[0]
@@ -95,10 +95,6 @@ class TicketManager(object):
                 lst = []
         self.save_db()
         
-
-            
-
-
     def modify_freeticket(self, date:str, ticket:int):
         self.db.at[date, "Free-Tickets"] = ticket
         self.update_db(date=date)
@@ -131,5 +127,76 @@ class TicketManager(object):
     def plot_goal(self):
         self.db.plot(y=["Goal", "Visitors"])
 
+TiMg = TicketManager()
+class FinanceManager(object):
+    #read csv, set base values
+    def __init__(self):
+        self.db = pd.read_csv("./storage/WS2425/finance_db.csv").set_index("Date")
+        self.uf_fraction = 0.75
+        self.get_ticket_data()
 
+    def save_db(self):
+        """
+        Saves Finance-Database to csv_file
+
+        PARAMETERS:
+        None
+
+        Return:
+        None
+        """
+        self.db.to_csv("./storage/WS2425/finance_db.csv")
+
+    def get_ticket_data(self):
+        """
+        Pulls ticket data out of the ticket database
+
+        PARAMETERS:
+        None
+
+        Return:
+        None
+        """
+        TiMg.update_database()
+        self.tickets = TiMg.db["Tickets"]
+        self.clubcards = TiMg.db["Club-Cards"]
+        self.addcosts = TiMg.db["Additional-Costs"]
+
+
+    def get_uf_fraction(self, date, total, addcost):
+        """
+        Calculates the amount of money per film going to unifilm
+
+        PARAMETERS:
+        - date: date of movie
+
+        RETURN:
+        - Unifilm-fraction -> Float
+        """
+        return round(((total * self.uf_fraction)-addcost),2)
+    
+    def get_ck_fraction(self, total):
+
+        return round(total * (1-self.uf_fraction), 2)
+    
+    def get_total_sv(self, tickets, club, price, pricec):
+        return tickets*price+club*pricec
+
+    def save_finances(self, date: str, ticket_price: float, club_price: float , addcost: float):
+        total = self.get_total_sv(self.tickets[date], self.clubcards[date], ticket_price, club_price)
+        dct = {"Ticket-Price": ticket_price, "Club-Price": club_price, "Sales-Volume": total, "Cash": total-addcost, "Unifilm": self.get_uf_fraction(date=date, total=total, addcost=addcost), "CK": self.get_ck_fraction(total=total), "Additional-Costs": addcost}
+        self.db.loc[date] = dct
+        self.add_total()
+        self.save_db()
+
+
+    def add_total(self):
+        self.db.drop("Total", inplace=True, axis=0)
+        dct = {"Ticket-Price": "-", "Club-Price": "-", "Sales-Volume": round(self.db["Sales-Volume"].sum(),2), "Cash": round(self.db["Cash"].sum(),2), "Unifilm": round(self.db["Unifilm"].sum(),2), "CK": round(self.db["CK"].sum(),2), "Additional-Costs": round(self.db["Additional-Costs"].sum(),2)}
+        self.db.loc["Total"] = dct
+        self.save_db()
+
+    def update_database(self):
+        self.db = pd.read_csv("./storage/WS2425/finance_db.csv").set_index("Date")
+    
     
